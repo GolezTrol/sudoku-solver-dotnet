@@ -80,10 +80,7 @@ namespace SudokuSolverCs
 
             return s;
         }
-    }
-    class Program
-    {
-        static string Solve(Sudoku sudoku)
+        public bool Solve()
         {
             int i = -1;
             Cell cell;
@@ -93,8 +90,8 @@ namespace SudokuSolverCs
                 // Get the next cell that can be modified
                 do
                 {
-                    if (i == 80) return sudoku.ToString() + " yoo 1";
-                    cell = sudoku.Cells[++i];
+                    if (i == 80) return true;
+                    cell = Cells[++i];
                 } while (cell.Original);
 
                 // Find the next number it can contain
@@ -128,10 +125,10 @@ namespace SudokuSolverCs
                     {
                         if (--i == -1)
                         {
-                            return "NOOOOOOOO solution";
+                            return false;
                         }
 
-                        cell = sudoku.Cells[i];
+                        cell = Cells[i];
                         if (!cell.Original)
                         {
                             if (cell.Value == 9)
@@ -147,10 +144,11 @@ namespace SudokuSolverCs
                     } while (true);
                 }
             } while (true);
+        }        
+    }
+    class Program
+    {
 
-            return "No solution found";
-
-        }
 
         static void Display(Sudoku sudoku)
         {
@@ -173,20 +171,28 @@ namespace SudokuSolverCs
         static void Main(string[] args)
         {
             var input = File.ReadAllLines("5.txt");
+            /*var input = new string[]{
+                "100007090030020008009600500005300900010080002600004000300000010040000007007000300",
+                "008034060100080000700010000003000000020500910900000007006003801300000020000900040"
+            };*/
+
+            int PuzzleCount = 100;
             var sud = new Sudoku();
             var i = 0;
             long totalms = 0;
-            foreach(var sudoku in input)
+            string sudoku;
+            for(i = 0; i < PuzzleCount; ++i)
             {
-                sud.Load(sudoku);
-
+                sudoku = input[i];
                 var s = Stopwatch.StartNew();
-                Solve(sud);
+                sud.Load(sudoku);
+                sud.Solve();
+                var elapsed = s.ElapsedMilliseconds;
                 Display(sud);
                 //Console.WriteLine($"input   : {sudoku}");
                 //Console.WriteLine($"solution: {Solve(sudoku)}");
-                Console.WriteLine($"solved in {s.ElapsedMilliseconds} ms");
-                totalms += s.ElapsedMilliseconds;
+                Console.WriteLine($"solved in {elapsed} ms");
+                totalms += elapsed;
 
                 Console.WriteLine();
                 if (++i == 10) break;
