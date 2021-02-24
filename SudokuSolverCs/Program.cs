@@ -81,6 +81,9 @@ namespace SudokuSolverCs
         {
             int i = -1;
             Cell cell;
+            bool ok;
+            int v;
+            int claims;
             do
             {
                 //Console.WriteLine($"i = {i}");
@@ -92,19 +95,19 @@ namespace SudokuSolverCs
                 } while (cell.Original);
 
                 // Find the next number it can contain
-                bool ok = false;
-                for (int v = cell.Value + 1; v <= 9; v++)
+
+                claims = 0;
+
+
+                ok = false;
+                foreach(var neighbor in cell.Neighbors)
+                {
+                    claims |= 1 << neighbor.Value;
+                }
+                for (v = cell.Value + 1; v <= 9; v++)
                 {
                     // Check if the number is already used in any of the related cells
-                    ok = true;
-                    foreach(var n in cell.Neighbors)
-                    {
-                        if (n.Value == v)
-                        {
-                            ok = false;
-                            break;
-                        }
-                    }
+                    ok = (claims & 1 << v) == 0;
                     
                     // If the number is okay, set it in the cell
                     if (ok)
