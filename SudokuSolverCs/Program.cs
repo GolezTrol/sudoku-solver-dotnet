@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -11,7 +11,7 @@ namespace SudokuSolverCs
     {
         public int Value;
         public bool Original;
-        public List<Cell> Neighbors = new List<Cell>();
+        public Cell[] Neighbors = new Cell[20];
     }
     public class Sudoku
     {
@@ -31,31 +31,28 @@ namespace SudokuSolverCs
                 x = i % 9;
                 y = i / 9;
                 int dx;
+                int n = 0;
                 for (dx = 0; dx < 9; dx++)
                 {
-                    if (dx!=x) Cells[i].Neighbors.Add(Cells[i-x+dx]);
+                    if (dx!=x) Cells[i].Neighbors[n++] = Cells[i-x+dx];
                 }
 
                 int dy;
                 for (dy = 0; dy < 9; dy++)
                 {
-                    if (dy!=y) Cells[i].Neighbors.Add(Cells[dy*9+x]);
+                    if (dy!=y) Cells[i].Neighbors[n++] = Cells[dy*9+x];
                 }
 
                 dx = x / 3 * 3;
                 dy = y / 3 * 3;
-                for (var cx = 0; cx < 3; cx++)
-                for (var cy = 0; cy < 3; cy++)
+                for (var cx = dx; cx < dx+3; cx++)
+                for (var cy = dy; cy < dy+3; cy++)
                 {
-                    if (dx + cx != x || dy + cy != y)
+                    if (cx != x & cy != y)
                     {
-                        int di = (dy + cy) * 9 + dx + cx;
-                        if (!Cells[i].Neighbors.Contains(Cells[di]))
-                            Cells[i].Neighbors.Add(Cells[di]);
+                        Cells[i].Neighbors[n++] = Cells[cy*9+cx];
                     }
-                    if (dy!=y) Cells[i].Neighbors.Add(Cells[dy*9+x]);
                 }
-
             }
         }
 
