@@ -124,21 +124,8 @@ namespace SudokuSolverCs
                         {
                             return false;
                         }
-
-                        cell = Cells[i];
-                        if (!cell.Original)
-                        {
-                            if (cell.Value == 9)
-                            {
-                                cell.Value = 0;
-                            }
-                            else
-                            {
-                                i--;
-                                break;
-                            }
-                        }
-                    } while (true);
+                    } while (Cells[i].Original);
+                    --i;
                 }
             } while (true);
         }        
